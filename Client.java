@@ -1,21 +1,29 @@
-
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+package chatcomsala;
 
-import java.io.*;
-import java.util.*;
-import java.net.*;
-import java.util.Scanner;
+/**
+ *
+ * @author plrf1
+ */
+
+
+import java.io.*; 
+import java.util.*; 
+import java.net.*; 
+import java.util.Scanner; 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Client {
-
+public class clientSimples {
+    
+   
+    
     public static void main(String[] args) throws IOException {
-
+    
         // getting localhost ip
         InetAddress ip = InetAddress.getByName("localhost");
 
