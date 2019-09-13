@@ -1,14 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package pokemon;
 
-/**
- *
- * @author aluno
- */
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -16,9 +6,12 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Vector;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 
 
 public class Server {
@@ -35,6 +28,9 @@ public class Server {
     static Vector<Cliente> roomTwo = new Vector<>();
     static Vector<Cliente> roomThree = new Vector<>();
 
+
+    //TURNOS ANCIÃ•ES
+    //NÃƒO MEXER OU ARRISCA ENFURECER AOS DEUSES ANTIGOS
     static Vector<String> entries = new Vector<>();
     static Vector<String> jose = new Vector<>();
     static Room roomBraba;
@@ -114,7 +110,7 @@ class Cliente implements Runnable {
     int hp;
     Vector<Pokemon> hand = new Vector<>();
     volatile int turno = 0;
-    volatile int acao = 0; // Açao escolhida
+    volatile int acao = 0; // Aï¿½ao escolhida
     int dano; // Dano que tu vai dar no prox turno
     int change; // Variavel de troca de pokemon
     String changeMsg;
@@ -134,10 +130,10 @@ class Cliente implements Runnable {
 
         String recieved;
         int index = 0;
-
-        Pokemon pokemon1 = new Pokemon("Charmander");
-        Pokemon pokemon2 = new Pokemon("Squirtle");
-        Pokemon pokemon3 = new Pokemon("Bulbasaur");
+        PokemonSelector seletor = new PokemonSelector();
+        Pokemon pokemon1 = new Pokemon(seletor.getRandPoke());
+        Pokemon pokemon2 = new Pokemon(seletor.getRandPoke());
+        Pokemon pokemon3 = new Pokemon(seletor.getRandPoke());
 
         hand.add(pokemon1);
         hand.add(pokemon2);
@@ -148,12 +144,12 @@ class Cliente implements Runnable {
             try {
 
                 recieved = ""; // Inicializar pro compilador n reclamar
-                if (turno == 0) { // Só considera o primeiro ataque enviado
+                if (turno == 0) { // Sï¿½ considera o primeiro ataque enviado
 
                     // Troca de pokemon quando o que ta em campo fica fainted
                     if (hand.firstElement().hp > 0) {
                         recieved = in.readUTF();
-                    } else {
+                    } else {        
                         // Troca se o pokemon em campo morrer
                         int count = 0;
                         // Exibe os pokemons na tela
@@ -193,7 +189,7 @@ class Cliente implements Runnable {
                     if (cl.s != this.s) {
                         // cl.out.writeUTF(recieved);
 
-                        // Verifica se é pra trocar de pokemon
+                        // Verifica se ï¿½ pra trocar de pokemon
                         if (recieved.equals("5")) {
                             int count = 0;
                             // Exibe os pokemons na tela
@@ -321,7 +317,7 @@ class Room implements Runnable {
 
         while (placebo == 1) {
 
-            if ((client1.turno == 2) && (client2.turno == 2)) { // Ações do turno kk
+            if ((client1.turno == 2) && (client2.turno == 2)) { // Aï¿½ï¿½es do turno kk
                 // Executar acao//
                 // Cliente 1
                 if (client1.acao != 0) {
@@ -331,7 +327,7 @@ class Room implements Runnable {
 
                         dano = client1.hand.firstElement().attack1(); // Dano do ataque 1
                         
-                        // Verifica se o ataque é super efetivo
+                        // Verifica se o ataque ï¿½ super efetivo
                         Boolean superEffectiveAttack = client1.hand.firstElement().counterVerifyAttack(client2.hand.firstElement().type);
                         Boolean superEffectiveDefense = client2.hand.firstElement().counterVerifyDefense(client1.hand.firstElement().type);
                         
@@ -463,7 +459,27 @@ class Room implements Runnable {
     }
 
 }
+class PokemonSelector{
+    ArrayList<String> pokemons;
 
+    public PokemonSelector() {
+        pokemons = new ArrayList<>(Arrays.asList("Charmander", "Squirtle", "Bulbasaur", "Caterpie", "Metapod",
+                "Butterfree", "Pidgey", "Rattata", "Spearow", "Ekans", "Pikachu", "Sandshrew", "Nidoran"));
+    }
+
+    public String getRandPoke() {
+       
+
+        Random rand = new Random();
+        int indiceEscolhido = rand.nextInt(pokemons.size());
+        String pokemonEscolhido = pokemons.get(indiceEscolhido);        
+        pokemons.remove(indiceEscolhido);
+
+        return pokemonEscolhido;
+
+
+    }
+}
 class Pokemon {
 
     String name;
@@ -471,7 +487,7 @@ class Pokemon {
     int damage = 10;
     int defense = 4;
     String type;
-    Boolean poisoned = false; //Aumenta o dano que o caba dá
+    Boolean poisoned = false; //Aumenta o dano que o caba dï¿½
     int poisonTime;
     // String attack1;
     // String attack2;
@@ -561,7 +577,17 @@ class Pokemon {
 
         return 10;
 
-    }
+    }    
+
+    /* public String getRandPoke() {
+        String[] pokemons = { "Charmander", "Squirtle", "Bulbasaur", "Caterpie", "Metapod", "Butterfree", "Pidgey",
+                "Rattata", "Spearow", "Ekans", "Pikachu", "Sandshrew", "Nidoran" };
+
+        Random rand = new Random();
+        int escolhido = rand.nextInt(pokemons.length - 1);
+
+        return pokemons[escolhido];
+    } */
 
     public String showType() {
 
@@ -785,3 +811,4 @@ class Pokemon {
 
 
 }
+
