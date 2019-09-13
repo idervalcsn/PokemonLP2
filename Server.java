@@ -483,6 +483,12 @@ class Pokemon {
         String[] water = { "Squirtle" };
         String[] fire = { "Charmander" };
         String[] grass = { "Bulbasaur" };
+        String[] bug = { "Caterpie", "Metapod", "Butterfree"};
+        String[] normal = { "Pidgey", "Rattata", "Spearow" };
+        String[] poison = { "Ekans", "Nidoran" }; 
+        String[] electric = { "Pikachu" }; 
+        String[] ground = { "Sandshrew" };
+        
         
         for (String pok : water) {
             if (name == pok) {
@@ -502,6 +508,36 @@ class Pokemon {
             }
         }
         
+        for (String pok : bug) {
+            if (name == pok) {
+                type = "Bug";
+            }
+        }
+        
+        for (String pok : normal) {
+            if (name == pok) {
+                type = "Normal";
+            }
+        }
+        
+        for (String pok : poison) {
+            if (name == pok) {
+                type = "Poison";
+            }
+        }
+        
+        for (String pok : electric) {
+            if (name == pok) {
+                type = "Electric";
+            }
+        }
+        
+        for (String pok : ground) {
+            if (name == pok) {
+                type = "Ground";
+            }
+        }
+        
     }
 
     public String showName() {
@@ -511,7 +547,8 @@ class Pokemon {
     public int showID() {
 
         int count = 1;
-        String[] pokemons = { "Charmander", "Squirtle", "Bulbasaur" };
+        String[] pokemons = { "Charmander", "Squirtle", "Bulbasaur", "Caterpie", "Metapod", "Butterfree",
+                              "Pidgey", "Rattata", "Spearow", "Ekans", "Pikachu", "Sandshrew", "Nidoran" };
 
         for (String pok : pokemons) {
 
@@ -535,20 +572,41 @@ class Pokemon {
     public Boolean counterVerifyAttack(String testador){
         
         if (this.type.equals("Fire")){
-            if (testador.equals("Grass")){
+            if (testador.equals("Grass") || testador.equals("Bug")){
                 return (true);
             }
         }
         if (this.type.equals("Water")){
-            if (testador.equals("Fire")){
+            if (testador.equals("Fire") || testador.equals("Ground")){
                 return (true);
             }
         }
         if (this.type.equals("Grass")){
+            if (testador.equals("Water") || testador.equals("Ground")){
+                return (true);
+            }
+        }        
+        if (this.type.equals("Bug")){
+            if (testador.equals("Grass")){
+                return (true);
+            }
+        }
+        if (this.type.equals("Poison")){
+            if (testador.equals("Grass")){
+                return (true);
+            }
+        }
+        if (this.type.equals("Electric")){
             if (testador.equals("Water")){
                 return (true);
             }
         }
+        if (this.type.equals("Ground")){
+            if (testador.equals("Fire") || testador.equals("Electric") || testador.equals("Poison")){
+                return (true);
+            }
+        }
+        
         
         return (false);
     }
