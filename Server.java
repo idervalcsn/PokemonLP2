@@ -339,7 +339,7 @@ class Room implements Runnable {
                         }
                         
                         
-                        System.out.println("Tipo do primero: " + client1.hand.firstElement().showType());
+                        System.out.println("Tipo do primeiro: " + client1.hand.firstElement().showType());
                         System.out.println("Tipo do segundo: " + client2.hand.firstElement().showType());
                         
                         System.out.println("Cliente 1 deu " + client1.hand.firstElement().showAttack1() + " com o "
@@ -351,19 +351,37 @@ class Room implements Runnable {
                         
                         System.out.println(" para " + client2.hand.firstElement().hp);
                         client1.acao = 0;
+                        System.out.println();   //Pra dar uns espacinho entre um ataque e outro
                     }
 
                     // Ataque 2 do cliente 1
                     if (client1.acao == 2) {
 
                         dano = client1.hand.firstElement().attack2(); // Dano do ataque 2
-                        System.out.println("Tipo do primero: " + client1.hand.firstElement().showType());
+
+                        // Verifica se o ataque � super efetivo
+                        Boolean superEffectiveAttack = client1.hand.firstElement().counterVerifyAttack(client2.hand.firstElement().type);
+                        Boolean superEffectiveDefense = client2.hand.firstElement().counterVerifyDefense(client1.hand.firstElement().type);
+                        
+                        if (superEffectiveAttack){
+                            dano *= 2;
+                        }
+                        if (superEffectiveDefense){
+                            dano = dano/2;
+                        }
+
+                        System.out.println("Tipo do primeiro: " + client1.hand.firstElement().showType());
+                        System.out.println("Tipo do segundo: " + client2.hand.firstElement().showType());
+
                         System.out.println("Cliente 1 deu " + client1.hand.firstElement().showAttack2() + " com o "
                                 + client1.hand.firstElement().name + " de " + dano + " de dano");
+
                         System.out.print("Hp do Cliente 2 foi de " + client2.hand.firstElement().hp);
                         client2.hand.firstElement().hp -= dano; // Diminuir hp do cliente 2
                         System.out.println(" para " + client2.hand.firstElement().hp);
+
                         client1.acao = 0;
+                        System.out.println();   //Pra dar uns espacinho entre um ataque e outro
                     }
                     
 
@@ -371,27 +389,37 @@ class Room implements Runnable {
                     if (client1.acao == 3) {
 
                         client1.hand.firstElement().attack3(); 
-                        System.out.println("Tipo do primero: " + client1.hand.firstElement().showType());
+
+                        System.out.println("Tipo do primeiro: " + client1.hand.firstElement().showType());
+
                         System.out.println("Cliente 1 usou " + client1.hand.firstElement().showAttack3() + " com o "
                                 + client1.hand.firstElement().name + " aumentando " + buff + " de damage");
+
                         //System.out.print("Hp do Cliente 2 foi de " + client2.hand.firstElement().hp);
                         //client2.hand.firstElement().hp -= dano; // Diminuir hp do cliente 2
                         //System.out.println(" para " + client2.hand.firstElement().hp);
+
                         client1.acao = 0;
+                        System.out.println();   //Pra dar uns espacinho entre um ataque e outro
                     }
                     
                     // Buffa defense cliente 1
                     if (client1.acao == 4) {
 
                         client1.hand.firstElement().attack4(); 
-                        System.out.println("Tipo do primero: " + client1.hand.firstElement().showType());
+
+                        System.out.println("Tipo do primeiro: " + client1.hand.firstElement().showType());
+
                         System.out.println("Cliente 1 usou " + client1.hand.firstElement().showAttack4() + " com o "
                                 + client1.hand.firstElement().name + " aumentando " + buff + " de defense");
+
                         //System.out.print("Hp do Cliente 2 foi de " + client2.hand.firstElement().hp);
                         //client2.hand.firstElement().hp -= dano; // Diminuir hp do cliente 2
                         //System.out.println("Poison: " + client2.hand.firstElement().poisoned);
                         //System.out.println(" para " + client2.hand.firstElement().hp);
+
                         client1.acao = 0;
+                        System.out.println();   //Pra dar uns espacinho entre um ataque e outro
                     }
 
                     // Troca de pokemons do client 1
@@ -417,35 +445,119 @@ class Room implements Runnable {
                 
                 if (client2.acao != 0) {
 
-                        if (client2.acao == 1) {
-                            dano = client2.hand.firstElement().attack1();
-                            System.out.println("Tipo do segundo: " + client2.hand.firstElement().showType());
-                            System.out.println("Cliente 2 deu " + client2.hand.firstElement().showAttack1() + " com o "
-                                    + client2.hand.firstElement().name + " de " + dano + " de dano");
-                            System.out.print("Hp do Cliente 1 foi de " + client1.hand.firstElement().hp);
-                            client1.hand.firstElement().hp -= dano; // Diminuir hp do cliente 2
-                            System.out.println(" para " + client1.hand.firstElement().hp);
-                            client2.acao = 0;
-                        }
-                        
-                        if (client2.acao == 5) {
-                            int changeIndex = Integer.parseInt(client2.changeMsg);
-                            Pokemon atual = client2.hand.firstElement();
-                            Pokemon troca = client2.hand.get(changeIndex);
+                    if (client2.acao == 1) {
 
-                            client2.hand.set(0, troca);
-                            client2.hand.set(changeIndex, atual);
+                        dano = client2.hand.firstElement().attack1();
 
-                            client2.acao = 0;
+                        Boolean superEffectiveAttack = client2.hand.firstElement().counterVerifyAttack(client1.hand.firstElement().type);
+                        Boolean superEffectiveDefense = client1.hand.firstElement().counterVerifyDefense(client2.hand.firstElement().type);
+
+                        if (superEffectiveAttack) {
+                            dano *= 2;
                         }
-                        
-                        if (client2.hand.firstElement().poisoned){
-                            System.out.println("Cliente 2 recebeu 10 de dano por veneno");
-                            client2.hand.firstElement().isPoisoned();
-                            client2.hand.firstElement().hp -= 10;
+                        if (superEffectiveDefense) {
+                            dano = dano / 2;
                         }
-                        
+
+                        System.out.println("Tipo do primeiro: " + client1.hand.firstElement().showType());
+                        System.out.println("Tipo do segundo: " + client2.hand.firstElement().showType());
+
+                        System.out.println("Cliente 2 deu " + client2.hand.firstElement().showAttack1() + " com o "
+                                + client2.hand.firstElement().name + " de " + dano + " de dano");
+
+                        System.out.print("Hp do Cliente 1 foi de " + client1.hand.firstElement().hp);
+                        client1.hand.firstElement().hp -= dano; // Diminuir hp do cliente 2
+                        System.out.println(" para " + client1.hand.firstElement().hp);
+
+                        client2.acao = 0;
+                        System.out.println();   //Pra dar uns espacinho entre um ataque e outro
                     }
+
+                    if (client2.acao == 2) {
+
+                        dano = client2.hand.firstElement().attack2();
+
+                        Boolean superEffectiveAttack = client2.hand.firstElement().counterVerifyAttack(client1.hand.firstElement().type);
+                        Boolean superEffectiveDefense = client1.hand.firstElement().counterVerifyDefense(client2.hand.firstElement().type);
+
+                        if (superEffectiveAttack) {
+                            dano *= 2;
+                        }
+                        if (superEffectiveDefense) {
+                            dano = dano / 2;
+                        }
+
+                        System.out.println("Tipo do primeiro: " + client1.hand.firstElement().showType());
+                        System.out.println("Tipo do segundo: " + client2.hand.firstElement().showType());
+
+                        System.out.println("Cliente 2 deu " + client2.hand.firstElement().showAttack2() + " com o "
+                                + client2.hand.firstElement().name + " de " + dano + " de dano");
+
+                        System.out.print("Hp do Cliente 1 foi de " + client1.hand.firstElement().hp);
+                        client1.hand.firstElement().hp -= dano; // Diminuir hp do cliente 2
+                        System.out.println(" para " + client1.hand.firstElement().hp);
+
+                        client2.acao = 0;
+                        System.out.println();   //Pra dar uns espacinho entre um ataque e outro
+                    }
+
+                    // Buffa damage cliente 2
+                    if (client2.acao == 3) {
+
+                        client2.hand.firstElement().attack3(); 
+
+                        System.out.println("Tipo do primeiro: " + client1.hand.firstElement().showType());
+                        System.out.println("Tipo do segundo: " + client2.hand.firstElement().showType());
+
+                        System.out.println("Cliente 2 usou " + client2.hand.firstElement().showAttack3() + " com o "
+                                + client2.hand.firstElement().name + " aumentando " + buff + " de damage");
+
+                        //System.out.print("Hp do Cliente 2 foi de " + client2.hand.firstElement().hp);
+                        //client2.hand.firstElement().hp -= dano; // Diminuir hp do cliente 2
+                        //System.out.println(" para " + client2.hand.firstElement().hp);
+
+                        client2.acao = 0;
+                        System.out.println();   //Pra dar uns espacinho entre um ataque e outro
+                    }
+
+                    // Buffa defense cliente 2
+                    if (client2.acao == 3) {
+
+                        client2.hand.firstElement().attack4(); 
+                        
+
+                        System.out.println("Tipo do primeiro: " + client1.hand.firstElement().showType());
+                        System.out.println("Tipo do segundo: " + client2.hand.firstElement().showType());
+
+                        System.out.println("Cliente 2 usou " + client2.hand.firstElement().showAttack4() + " com o "
+                                + client2.hand.firstElement().name + " aumentando " + buff + " de defense");
+
+                        //System.out.print("Hp do Cliente 2 foi de " + client2.hand.firstElement().hp);
+                        //client2.hand.firstElement().hp -= dano; // Diminuir hp do cliente 2
+                        //System.out.println(" para " + client2.hand.firstElement().hp);
+
+                        client2.acao = 0;
+                        System.out.println();   //Pra dar uns espacinho entre um ataque e outro
+                    }
+
+                    if (client2.acao == 5) {
+                        int changeIndex = Integer.parseInt(client2.changeMsg);
+                        Pokemon atual = client2.hand.firstElement();
+                        Pokemon troca = client2.hand.get(changeIndex);
+
+                        client2.hand.set(0, troca);
+                        client2.hand.set(changeIndex, atual);
+
+                        client2.acao = 0;
+                    }
+
+                    if (client2.hand.firstElement().poisoned) {
+                        System.out.println("Cliente 2 recebeu 10 de dano por veneno");
+                        client2.hand.firstElement().isPoisoned();
+                        client2.hand.firstElement().hp -= 10;
+                    }
+
+                }
                 
                 /////////////////
                 client1.turno = 0;
@@ -639,23 +751,23 @@ class Pokemon {
 
     public Boolean counterVerifyDefense(String testador){
         
-        if (this.type.equals("Grass")){
-            if (testador.equals("Fire")){
-                return (false);
-            }
-        }
         if (this.type.equals("Fire")){
-            if (testador.equals("Water")){
-                return (false);
+            if (testador.equals("Grass")){
+                return (true);
             }
         }
         if (this.type.equals("Water")){
-            if (testador.equals("Grass")){
-                return (false);
+            if (testador.equals("Fire")){
+                return (true);
+            }
+        }
+        if (this.type.equals("Grass")){
+            if (testador.equals("Water")){
+                return (true);
             }
         }
         
-        return (true);
+        return (false);
     }
     
     public String showAttack1() {
@@ -735,7 +847,7 @@ class Pokemon {
         Random rand = new Random();
         int errou = rand.nextInt(100);
         int n = rand.nextInt(3); // Adicional do dano
-        int x = rand.nextInt(2); // Controle de subida ou descida de dano;
+        int x = rand.nextInt(3); // Controle de subida ou descida de dano;
 
         if (errou > 90) {
             return 0;
@@ -755,16 +867,16 @@ class Pokemon {
         Random rand = new Random();
         int errou = rand.nextInt(100);
         int n = rand.nextInt(5); // Adicional do dano
-        int x = rand.nextInt(2); // Controle de subida ou descida de dano;
+        int x = rand.nextInt(3); // Controle de subida ou descida de dano;
 
         if (errou > 75) {
             return 0;
         }
         if (x == 0) {
-            return (damage + 2 * n);
-        } else if (x == 1) {
+            return damage + (2 * n);
+        }  else if (x == 1) {
             return (damage - n);
-        } else {
+        }  else {
             return (damage);
         }
     }
